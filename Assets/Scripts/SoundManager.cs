@@ -48,14 +48,6 @@ public class SoundManager : MonoBehaviour
                 relatedSound = FindRelatedSound(pieceType);
                 relatedSound.Play();
                 break;
-            case PieceType.BALLOON:
-                relatedSound = FindRelatedSound(pieceType);
-                relatedSound.Play();
-                break;
-            case PieceType.DUCK:
-                relatedSound = FindRelatedSound(pieceType);
-                relatedSound.Play();
-                break;
             default:
                 Debug.LogWarning("Not Implemented Sound");
                 break;

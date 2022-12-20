@@ -33,10 +33,9 @@ public class GameGrid : MonoBehaviour
 
             bool anyGamePieceMovedBelow = MovePiecesHaveEmptyNeighbourBelow();
             bool anyGamePieceSpawnedOnFirstRow = FillFirstRow();
-            bool anyDuckClearedOnLastRow = ClearDucksInLastRow();
             bool isAnyChangeHappenedOnLastCycle = anyGamePieceMovedBelow || anyGamePieceSpawnedOnFirstRow;
 
-            if (!isAnyChangeHappenedOnLastCycle && !isGridCheckedForMatches && !anyDuckClearedOnLastRow)
+            if (!isAnyChangeHappenedOnLastCycle && !isGridCheckedForMatches)
             {
                 CheckMachesOnGrid();
                 isGridCheckedForMatches = true;
@@ -115,20 +114,6 @@ public class GameGrid : MonoBehaviour
         return PieceType.EMPTY;
     }
 
-    private bool ClearDucksInLastRow()
-    {
-        bool madeChangesOnGrid = false;
-        for (int x = 0; x < levelData.XDim; x++)
-        {
-            GamePiece lastRowPiece = pieces[x, levelData.YDim - 1];
-
-            if (lastRowPiece.Type != PieceType.DUCK)
-                continue;
-            ClearPiece(lastRowPiece.XCord, lastRowPiece.YCord);
-            madeChangesOnGrid = true;
-        }
-        return madeChangesOnGrid;
-    }
 
     private void CheckMachesOnGrid()
     {
@@ -329,54 +314,9 @@ public class GameGrid : MonoBehaviour
                 levelMoveAmount--;
 
                 ClearPieces(sameColorNeighbours);
-                ClearBalloonsAroundPieces(sameColorNeighbours);
                 if (levelMoveAmount < 1)
                     GameManager.Instance.LevelCompleted();
             }
-        }
-        else if (pressedPiece.Type == PieceType.ROCKETLEFT)
-        {
-            List<GamePiece> sameRowRightGamePieces = GetSameRowRightGamePieces(pressedPiece);
-            ClearPieces(sameRowRightGamePieces);
-            levelMoveAmount--;
-        }
-        else if (pressedPiece.Type == PieceType.ROCKETRIGHT)
-        {
-            List<GamePiece> sameRowLeftGamePieces = GetSameRowLeftGamePieces(pressedPiece);
-            ClearPieces(sameRowLeftGamePieces);
-            levelMoveAmount--;
-        }
-    }
-
-    private List<GamePiece> GetSameRowRightGamePieces(GamePiece pressedPiece)
-    {
-        List<GamePiece> sameRowPieces = new List<GamePiece>();
-
-        for (int i = pressedPiece.XCord; i < levelData.XDim; i++)
-        {
-            sameRowPieces.Add(pieces[i, pressedPiece.YCord]);
-        }
-
-        return sameRowPieces;
-    }
-
-    private List<GamePiece> GetSameRowLeftGamePieces(GamePiece pressedPiece)
-    {
-        List<GamePiece> sameRowPieces = new List<GamePiece>();
-
-        for (int i = pressedPiece.XCord; i >= 0; i--)
-        {
-            sameRowPieces.Add(pieces[i, pressedPiece.YCord]);
-        }
-
-        return sameRowPieces;
-    }
-
-    private void ClearBalloonsAroundPieces(List<GamePiece> sameColorNeighbours)
-    {
-        for (int i = 0; i < sameColorNeighbours.Count; i++)
-        {
-            CheckNeighboursForBallon(sameColorNeighbours[i]);
         }
     }
 
@@ -433,36 +373,6 @@ public class GameGrid : MonoBehaviour
         }
     }
 
-    private void CheckNeighboursForBallon(GamePiece piece)
-    {
-        if (piece.YCord > 0)
-        {
-            var upNeighbour = pieces[piece.XCord, piece.YCord - 1];
-            if (upNeighbour.Type == PieceType.BALLOON)
-                ClearPiece(piece.XCord, piece.YCord - 1);
-        }
-
-        if (piece.YCord < levelData.YDim - 1)
-        {
-            var belowNeighbour = pieces[piece.XCord, piece.YCord + 1];
-            if (belowNeighbour.Type == PieceType.BALLOON)
-                ClearPiece(piece.XCord, piece.YCord + 1);
-        }
-
-        if (piece.XCord > 0)
-        {
-            var leftNeighbour = pieces[piece.XCord - 1, piece.YCord];
-            if (leftNeighbour.Type == PieceType.BALLOON)
-                ClearPiece(piece.XCord - 1, piece.YCord);
-        }
-
-        if (piece.XCord < levelData.XDim - 1)
-        {
-            var rightNeighbour = pieces[piece.XCord + 1, piece.YCord];
-            if (rightNeighbour.Type == PieceType.BALLOON)
-                ClearPiece(piece.XCord + 1, piece.YCord);
-        }
-    }
 
     private bool CheckIfPieceAlreadyInList(List<GamePiece> gamePieceList, GamePiece piece)
     {
