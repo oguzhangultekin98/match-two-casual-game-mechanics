@@ -21,14 +21,7 @@ public class GameGrid : MonoBehaviour
         pieces = new GamePiece[levelData.XDim, levelData.YDim];
         CreateGridBackGround();
         CreatePiecePrafabDict();
-        if (levelData.FirstAppearGrid.Count == 0)
-        {
-            FillGridWithPieceType(PieceType.EMPTY);
-        }
-        else
-        {
-            FillGridWithFirstAppearGrid();
-        }
+        FillGridWithPieceType(PieceType.EMPTY);
         StartCoroutine(Fill());
     }
 
@@ -177,20 +170,6 @@ public class GameGrid : MonoBehaviour
         bg = Instantiate(bg, backGroundInitialPosition, Quaternion.identity);
         SpriteRenderer renderer = bg.GetComponent<SpriteRenderer>();
         renderer.size = new Vector2(gridWidth+offset , gridHeight + offset);
-    }
-
-    private void FillGridWithFirstAppearGrid()
-    {
-        for (int x = 0; x < levelData.XDim; x++)
-        {
-            for (int y = 0; y < levelData.YDim; y++)
-            {
-                var firstAppearGridElement = levelData.FirstAppearGrid[x * levelData.YDim + y];
-                var piece = SpawnNewPiece(x, y, firstAppearGridElement.Type);
-                if (firstAppearGridElement.Type == PieceType.REGULAR)
-                    piece.ColorComponent.Color = firstAppearGridElement.Color;
-            }
-        }
     }
 
     private void CreatePiecePrafabDict()

@@ -17,9 +17,6 @@ public class LevelData
     [SerializeField] private List<ColorType> availableColorsForLevel;
     public List<ColorType> AvailableColorsForLevel => availableColorsForLevel;
 
-    [SerializeField] private List<FirstAppearGrid> firstAppearGrid;
-    public List<FirstAppearGrid> FirstAppearGrid => firstAppearGrid;
-
     [SerializeField] private List<LevelGoal> levelGoals;
     public List<LevelGoal> LevelGoals => levelGoals;
 
@@ -36,7 +33,6 @@ public class LevelData
         this.yDim = yDim;
         this.fillTime = fillTime;
         this.availableColorsForLevel = availableColors;
-        this.firstAppearGrid = firstAppearGrid;
         this.levelGoals = levelGoals;
         this.levelMoveAmount = levelMoveAmount;
         this.piecePrefabs = prefabs;
