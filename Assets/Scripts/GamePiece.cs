@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class GamePiece : MonoBehaviour
+public abstract class GamePiece : MonoBehaviour
 {
     private int xCord;
     private int yCord;
@@ -26,50 +26,32 @@ public class GamePiece : MonoBehaviour
         set { type = value; } 
     }
 
-    private GameGrid grid;
 
-    public GameGrid GridRef => grid;
+    [HideInInspector] public GameGrid Grid;
+    [HideInInspector] public MovablePiece MovableComponent;
+    [HideInInspector] public ColorPiece ColorComponent;
+    [HideInInspector] public ClearablePiece ClearableComponent;
 
-    private MovablePiece movableComponent;
-
-    public MovablePiece MovableComponent => movableComponent;
-
-    private ColorPiece colorComponent;
-
-    public ColorPiece ColorComponent => colorComponent;
-
-    private ClearablePiece clearableComponent;
-
-    public ClearablePiece ClearableComponent => clearableComponent;
-
-    private void Awake()
+    public bool IsMovable()
     {
-        movableComponent = GetComponent<MovablePiece>();
-        colorComponent = GetComponent<ColorPiece>();
-        clearableComponent = GetComponent<ClearablePiece>();
+        return MovableComponent != null;
+    }
+
+    public bool IsColored()
+    {
+        return ColorComponent != null;
     }
 
     public void SetNecessarVariables(int x, int y, GameGrid grid, PieceType type)
     {
         xCord = x;
         yCord = y;
-        this.grid = grid;
+        this.Grid = grid;
         this.type = type;
     }
 
     private void OnMouseDown()
     {
-        grid.PressPiece(this);
+        Grid.PressPiece(this);
     }
-
-    public bool IsMovable()
-    {
-        return movableComponent != null;
-    }
-
-    public bool IsColored()
-    {
-        return colorComponent != null;
-    }
-
 }
