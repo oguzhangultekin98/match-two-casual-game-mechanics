@@ -34,10 +34,26 @@ public class GameGrid : MonoBehaviour
 
             if (!isAnyChangeHappenedOnLastCycle && !isGridCheckedForMatches)
             {
-                CheckMachesOnGrid();
-                isGridCheckedForMatches = true;
+                List<Match> matches = GetMatchesOnGrid();
+                if (matches.Count == 0)
+                {
+                    if (IsPossibleToCreateMatchOnGrid())
+                        ShuffleGameGrid();
+                    else
+                        GenerateNewGrid();
+                }
+                else
+                {
+                    UpdateMatchTiers(matches);
+                    isGridCheckedForMatches = true;
+                }
             }
         }
+    }
+
+    private void UpdateMatchTiers(List<Match> matches)
+    {
+
     }
 
     private bool MovePiecesHaveEmptyNeighbourBelow()
@@ -112,10 +128,10 @@ public class GameGrid : MonoBehaviour
     }
 
 
-    private void CheckMachesOnGrid()
+    private List<Match> GetMatchesOnGrid()
     {
         List<GamePiece> checkedPieces = new List<GamePiece>();
-        int biggestNeighbourGroup = -1;
+        List<Match> matches = new List<Match>();
         for (int i = 0; i < levelData.XDim; i++)
         {
             for (int j = 0; j < levelData.YDim; j++)
@@ -127,19 +143,16 @@ public class GameGrid : MonoBehaviour
                 List<GamePiece> sameColorNeigbours = new List<GamePiece>();
                 sameColorNeigbours.Add(currentPiece);
                 GetSameColorNeighbours(currentPiece, sameColorNeigbours, currentPiece.ColorComponent.Color);
-                if (biggestNeighbourGroup < sameColorNeigbours.Count)
-                    biggestNeighbourGroup = sameColorNeigbours.Count;
-
+                if (sameColorNeigbours.Count > 1)
+                {
+                    Match match = new Match();
+                    match.AddGamePieces(sameColorNeigbours);
+                    matches.Add(match);
+                }
             }
         }
 
-        if (biggestNeighbourGroup == 1)
-        {
-            if (IsPossibleToCreateMatchOnGrid())
-                ShuffleGameGrid();
-            else
-                GenerateNewGrid();
-        }
+        return matches;
     }
 
     private void CreatePiecePrafabDict()
@@ -169,7 +182,7 @@ public class GameGrid : MonoBehaviour
     {
         ClearGrid();
         FillGridWithPieceType(PieceType.REGULAR);
-        CheckMachesOnGrid();
+        isGridCheckedForMatches = false;
     }
 
     private void ClearGrid()
@@ -199,7 +212,7 @@ public class GameGrid : MonoBehaviour
                 }
             }
         }
-        CheckMachesOnGrid();
+        isGridCheckedForMatches = false;
     }
 
     private bool IsPossibleToCreateMatchOnGrid()

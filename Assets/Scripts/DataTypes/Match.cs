@@ -3,10 +3,15 @@ using UnityEngine;
 
 public class Match
 {
-    public readonly List<GameObject> tiles = new List<GameObject>();
+    public readonly List<GamePiece> gamePieces = new List<GamePiece>();
 
-    public void AddTile(GameObject tile)
+    public void AddGamePiece(GamePiece piece)
     {
-        tiles.Add(tile);
+        gamePieces.Add(piece);
+    }
+
+    public void AddGamePieces(List<GamePiece> pieces)
+    {
+        gamePieces.AddRange(pieces);
     }
 }

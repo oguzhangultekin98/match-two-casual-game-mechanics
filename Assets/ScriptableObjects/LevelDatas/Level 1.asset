@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd4e4cdb9c9004780a454a43018235aa, type: 3}
+  m_Name: Level 1
+  m_EditorClassIdentifier: 
+  Value:
+    xDim: 10
+    yDim: 10
+    fillTime: 0.1
+    availableColorsForLevel: 0500000001000000020000000300000004000000
+    levelGoals:
+    - pieceType: 1
+      colorType: 5
+      amount: 985
+    levelMoveAmount: 25
+    piecePrefabs:
+    - type: 0
+      prefab: {fileID: 9187056396541872520, guid: 638906e51ffaf2c459bc5f9de4c5aace, type: 3}
+      spawnRate: 0
+    - type: 1
+      prefab: {fileID: 4375375242950779544, guid: 5e77167a65abbe94f8ce80b2d998ca5e, type: 3}
+      spawnRate: 0.9
