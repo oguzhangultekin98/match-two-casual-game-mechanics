@@ -31,7 +31,7 @@ public class ColorPiece : MonoBehaviour
         {
             if (!colorSpriteDict.ContainsKey(colorSprites[i].value.color))
             {
-                colorSpriteDict.Add(colorSprites[i].value.color, colorSprites[i].value.Sprite);
+                colorSpriteDict.Add(colorSprites[i].value.color, colorSprites[i].value.Sprites[0]);
             }
         }
     }
@@ -49,6 +49,11 @@ public class ColorPiece : MonoBehaviour
         {
             sprite.sprite = colorSpriteDict[newColor];
         }
+    }
+
+    public void UpdateTierVisual()
+    {
+
     }
 
 }

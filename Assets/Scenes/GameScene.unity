@@ -694,7 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d04373b4a1e45ca4792ff3b8c1e48553, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelDataScriptableObj: {fileID: 11400000, guid: 643e64eec2ce4426b8c2b00daf046eb7, type: 2}
+  levelDataScriptableObj: {fileID: 11400000, guid: a9e55d52d0abe44ea9018d977e34de25, type: 2}
 --- !u!4 &1494445007
 Transform:
   m_ObjectHideFlags: 0

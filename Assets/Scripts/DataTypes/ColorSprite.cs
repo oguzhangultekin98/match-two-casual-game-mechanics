@@ -4,7 +4,7 @@ using UnityEngine;
 public struct ColorSprite
 {
     public ColorType color;
-    public Sprite Sprite;
+    public Sprite[] Sprites;
 
     public Color GetRGBColor()
     {

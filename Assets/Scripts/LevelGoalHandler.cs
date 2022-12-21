@@ -60,7 +60,7 @@ public class LevelGoalHandler : MonoBehaviour
         for (int i = 0; i < colorSpriteScriptableObjects.Length; i++)
         {
             if (colorType == colorSpriteScriptableObjects[i].value.color)
-                return colorSpriteScriptableObjects[i].value.Sprite;
+                return colorSpriteScriptableObjects[i].value.Sprites[0];
         }
         return notImplementedSprite;
     }
@@ -108,7 +108,6 @@ public class LevelGoalHandler : MonoBehaviour
                 return pieceLocation + gamePiecePivotOffset;
             }
         }
-        Debug.Log(location);
         location.z = 0f;
         return location;
     }

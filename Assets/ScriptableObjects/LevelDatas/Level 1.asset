@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   Value:
-    xDim: 10
-    yDim: 10
+    xDim: 2
+    yDim: 2
     fillTime: 0.1
     availableColorsForLevel: 0500000001000000020000000300000004000000
     levelGoals:
