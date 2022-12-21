@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ColorPiece : MonoBehaviour
 {
-    private static int howManyPieceSpawned = 0;
-    public int HowManyPieceSpawned => howManyPieceSpawned;
     public ColorSpriteScriptableObj[] colorSprites;
 
     private ColorType color;
@@ -18,20 +17,22 @@ public class ColorPiece : MonoBehaviour
     public int NumColors => colorSprites.Length;
 
     private SpriteRenderer sprite;
-    private Dictionary<ColorType, Sprite> colorSpriteDict;
+    private Dictionary<ColorType, Sprite[]> colorSpriteDict;
+
+    [SerializeField] private int ATierCondition;
+    [SerializeField] private int BTierCondition;
+    [SerializeField] private int CTierCondition;
+
     private void Awake()
     {
-        howManyPieceSpawned++;
-
         sprite = GetComponentInChildren<SpriteRenderer>();
-        sprite.sortingOrder = howManyPieceSpawned;
-        colorSpriteDict = new Dictionary<ColorType, Sprite>();
+        colorSpriteDict = new Dictionary<ColorType, Sprite[]>();
 
         for (int i = 0; i < colorSprites.Length; i++)
         {
             if (!colorSpriteDict.ContainsKey(colorSprites[i].value.color))
             {
-                colorSpriteDict.Add(colorSprites[i].value.color, colorSprites[i].value.Sprites[0]);
+                colorSpriteDict.Add(colorSprites[i].value.color, colorSprites[i].value.Sprites);
             }
         }
     }
@@ -47,13 +48,23 @@ public class ColorPiece : MonoBehaviour
 
         if (colorSpriteDict.ContainsKey(newColor))
         {
-            sprite.sprite = colorSpriteDict[newColor];
+            sprite.sprite = colorSpriteDict[newColor][0];
         }
     }
 
-    public void UpdateTierVisual()
+    public void UpdateTierVisual(int matchSize)
     {
+        SugarTier tier;
+        if (matchSize > CTierCondition)
+            tier = SugarTier.CTIER;
+        else if (matchSize > BTierCondition)
+            tier = SugarTier.BTIER;
+        else if (matchSize > ATierCondition)
+            tier = SugarTier.ATIER;
+        else
+            tier = SugarTier.REGULARTIER;
 
+        sprite.sprite = colorSpriteDict[color][(int)tier];
     }
 
 }

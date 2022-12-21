@@ -10,9 +10,4 @@ public class SugarPiece : GamePiece
         base.ColorComponent = GetComponent<ColorPiece>();
         base.ClearableComponent = GetComponent<ClearablePiece>();
     }
-
-    private void UpdateTierViusals()
-    {
-        //ColorComponent.UpdateTier();
-    }
 }

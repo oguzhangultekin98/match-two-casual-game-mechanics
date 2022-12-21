@@ -42,7 +42,7 @@ public class ClearablePiece : MonoBehaviour
         {
             if (isPiecePartOfGoal)
             {
-                spriteRenderer.sortingOrder = piece.ColorComponent.HowManyPieceSpawned + 999;
+                spriteRenderer.sortingOrder = 999;
                 float timeToScatter = ScatterPiece();
                 yield return new WaitForSeconds(timeToScatter);
                 Vector3 goalLocation = LevelGoalHandler.Instance.GetGoalLocation(piece.ColorComponent.Color);

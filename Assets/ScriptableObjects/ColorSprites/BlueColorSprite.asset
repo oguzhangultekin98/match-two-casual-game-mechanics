@@ -15,4 +15,7 @@ MonoBehaviour:
   value:
     color: 4
     Sprites:
-    - {fileID: 21300000, guid: 8fb9d5746313d4ca4b736c3eb613530b, type: 3}
+    - {fileID: 21300000, guid: 1e227b88822e14b3e9daa57b20021381, type: 3}
+    - {fileID: 21300000, guid: 492fa99f8804e4e9c900e3e27a58371f, type: 3}
+    - {fileID: 21300000, guid: c682ef9ad699c46c6b2eadee329cea8d, type: 3}
+    - {fileID: 21300000, guid: 8667d59d950fe44bea4ea3ae5af69bdf, type: 3}
