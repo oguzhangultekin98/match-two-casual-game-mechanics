@@ -26,7 +26,7 @@ public class LevelData
     [SerializeField] private List<PiecePrefab> piecePrefabs;
     public List<PiecePrefab> PiecePrefabs => piecePrefabs;
 
-    public LevelData(int xDim, int yDim, float fillTime, List<ColorType> availableColors, List<FirstAppearGrid> firstAppearGrid,
+    public LevelData(int xDim, int yDim, float fillTime, List<ColorType> availableColors,
         List<LevelGoal> levelGoals, int levelMoveAmount, List<PiecePrefab> prefabs)
     {
         this.xDim = xDim;
