@@ -12,14 +12,11 @@ public class GameGrid : MonoBehaviour
     private GamePiece[,] pieces;
     bool isGridCheckedForMatches = false;
 
-    [SerializeField]private GameObject bg;
-
     private void Awake()
     {
         levelData = levelDataScriptableObj.Value;
         levelMoveAmount = levelData.LevelMoveAmount;
         pieces = new GamePiece[levelData.XDim, levelData.YDim];
-        CreateGridBackGround();
         CreatePiecePrafabDict();
         FillGridWithPieceType(PieceType.EMPTY);
         StartCoroutine(Fill());
@@ -143,18 +140,6 @@ public class GameGrid : MonoBehaviour
             else
                 GenerateNewGrid();
         }
-    }
-
-    private void CreateGridBackGround()
-    {
-        Vector2 gridStartPos = GetWorldPosition(0, 0);
-        float gridWidth = (gridStartPos - GetWorldPosition(0, levelData.YDim)).y;
-        float gridHeight = (GetWorldPosition(levelData.YDim, 0) - gridStartPos).x;
-        float offset = 0.5f;
-        Vector2 backGroundInitialPosition = gridStartPos - (new Vector2(1,-1)) * offset / 2;
-        bg = Instantiate(bg, backGroundInitialPosition, Quaternion.identity);
-        SpriteRenderer renderer = bg.GetComponent<SpriteRenderer>();
-        renderer.size = new Vector2(gridWidth+offset , gridHeight + offset);
     }
 
     private void CreatePiecePrafabDict()

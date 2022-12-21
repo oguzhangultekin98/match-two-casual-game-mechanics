@@ -40,7 +40,6 @@ public class ClearablePiece : MonoBehaviour
         }
         else
         {
-            ParticleManager.Instance.CreatePieceClearParticle(piece.Type, transform.position, piece.ColorComponent.Color);
             if (isPiecePartOfGoal)
             {
                 spriteRenderer.sortingOrder = piece.ColorComponent.HowManyPieceSpawned + 999;
