@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 8578445469904101835}
   - component: {fileID: 813914120666416607}
   - component: {fileID: 1728531285}
+  - component: {fileID: 2890824005014631438}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -236,6 +237,36 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
         m_MethodName: PlayerClickedOnMatch
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2890824005014631438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5612274914258108918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e30a4ea76a744d1b335bb3eae95fdbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scriptableEvent: {fileID: 0}
+  scriptableEvents:
+  - {fileID: 11400000, guid: f4ffb3b2ab91047689c275fc0c493002, type: 2}
+  onRaised:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 813914120666416607}
+        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+        m_MethodName: InitilizeGameGrid
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

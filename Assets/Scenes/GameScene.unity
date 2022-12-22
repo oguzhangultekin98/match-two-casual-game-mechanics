@@ -455,18 +455,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1728531285, guid: 212c10402a3384d099e57132f1e6b9c5, type: 3}
-      propertyPath: onRaised.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PlayerClickedOnMatch
-      objectReference: {fileID: 0}
-    - target: {fileID: 1728531285, guid: 212c10402a3384d099e57132f1e6b9c5, type: 3}
-      propertyPath: onRaised.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: LevelManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 1728531285, guid: 212c10402a3384d099e57132f1e6b9c5, type: 3}
-      propertyPath: onRaised.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 429977084127792648, guid: 212c10402a3384d099e57132f1e6b9c5, type: 3}
       propertyPath: slots.Array.data[0]
       value: 
@@ -479,14 +467,6 @@ PrefabInstance:
       propertyPath: slots.Array.data[2]
       value: 
       objectReference: {fileID: 1834984462}
-    - target: {fileID: 429977084127792648, guid: 212c10402a3384d099e57132f1e6b9c5, type: 3}
-      propertyPath: Event_AllGoalsAccomplished
-      value: 
-      objectReference: {fileID: 11400000, guid: beeb11c6e51f34c909bfd29bf7892cf0, type: 2}
-    - target: {fileID: 813914120666416607, guid: 212c10402a3384d099e57132f1e6b9c5, type: 3}
-      propertyPath: Event_PlayerHasNoMoveLeft
-      value: 
-      objectReference: {fileID: 11400000, guid: dfd9e6b96e40e442d829d9d8c31e7adf, type: 2}
     - target: {fileID: 1607710214280140509, guid: 212c10402a3384d099e57132f1e6b9c5, type: 3}
       propertyPath: m_RootOrder
       value: 1

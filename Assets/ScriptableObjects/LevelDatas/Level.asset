@@ -20,7 +20,7 @@ MonoBehaviour:
     levelGoals:
     - pieceType: 1
       colorType: 5
-      amount: 985
+      amount: 810
     levelMoveAmount: 25
     piecePrefabs:
     - type: 0

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1463339181557184404}
   - component: {fileID: 1463339181557184405}
+  - component: {fileID: 32744222}
   m_Layer: 0
   m_Name: GameGrid
   m_TagString: Untagged
@@ -44,5 +45,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d04373b4a1e45ca4792ff3b8c1e48553, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelDataScriptableObj: {fileID: 11400000, guid: 643e64eec2ce4426b8c2b00daf046eb7, type: 2}
   Event_ClickedOnMatch: {fileID: 11400000, guid: ae625b02554de48d0aa93f442748e358, type: 2}
+  Event_GameGridWaitingToInitilize: {fileID: 11400000, guid: f4ffb3b2ab91047689c275fc0c493002, type: 2}
+--- !u!114 &32744222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463339181557184406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d3fc389972459ab0bffa26c0fab3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scriptableEvent: {fileID: 0}
+  scriptableEvents:
+  - {fileID: 11400000, guid: b86a4d0d0b2c24f01bde8b42a7c0f39e, type: 2}
+  onRaised:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1463339181557184405}
+        m_TargetAssemblyTypeName: GameGrid, Assembly-CSharp
+        m_MethodName: OnGameStateChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

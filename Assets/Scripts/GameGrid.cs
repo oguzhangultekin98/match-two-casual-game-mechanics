@@ -5,17 +5,24 @@ using ScriptableEvents.Events;
 
 public class GameGrid : MonoBehaviour
 {
-    [SerializeField] private LevelDataScriptableObject levelDataScriptableObj;
-    private LevelData levelData;
+    [SerializeField] private SimpleScriptableEvent Event_ClickedOnMatch;
+    [SerializeField] private GameObjectScriptableEvent Event_GameGridWaitingToInitilize;
 
+    private LevelData levelData;
     private Dictionary<PieceType, GameObject> piecePrefabDict;
     private GamePiece[,] pieces;
-    [SerializeField] private SimpleScriptableEvent Event_ClickedOnMatch;
-    bool isGridCheckedForMatches = false;
 
-    private void Awake()
+    private bool isGridCheckedForMatches = false;
+    private bool isGameEnded;
+
+    private void Start()
     {
-        levelData = levelDataScriptableObj.Value;
+        Event_GameGridWaitingToInitilize.Raise(gameObject);
+    }
+
+    public void InitilizeGameGrid(LevelData LevelData)
+    {
+        levelData = LevelData;
         pieces = new GamePiece[levelData.XDim, levelData.YDim];
         CreatePiecePrafabDict();
         FillGridWithPieceType(PieceType.EMPTY);
@@ -324,7 +331,7 @@ public class GameGrid : MonoBehaviour
 
     public void PressPiece(GamePiece pressedPiece)
     {
-        if (GameManager.Instance.gameState == GameState.GameEnd)
+        if (isGameEnded)
             return;
 
         if (pressedPiece.Type == PieceType.REGULAR)
@@ -347,12 +354,12 @@ public class GameGrid : MonoBehaviour
         var startingPieceXCord = startingPiece.XCord;
         var startingPieceYCord = startingPiece.YCord;
 
-        CheckNeighbours(SameColorNeighbours, searchingColor, startingPieceXCord, startingPieceYCord);
+        CheckNeighboursForSameColor(SameColorNeighbours, searchingColor, startingPieceXCord, startingPieceYCord);
 
         return SameColorNeighbours;
     }
 
-    private List<GamePiece> CheckNeighbours(List<GamePiece> SameColorNeighbours, ColorType searchingColor, int startingPieceXCord, int startingPieceYCord)
+    private List<GamePiece> CheckNeighboursForSameColor(List<GamePiece> SameColorNeighbours, ColorType searchingColor, int startingPieceXCord, int startingPieceYCord)
     {
         if (startingPieceYCord > 0)
         {
@@ -418,5 +425,12 @@ public class GameGrid : MonoBehaviour
         {
             ClearPiece(clearPieceList[i].XCord, clearPieceList[i].YCord);
         }
+    }
+
+    public void OnGameStateChange(int gameState)
+    {
+        GameState state = (GameState)gameState;
+        if (state == GameState.GameEnd)
+            isGameEnded = true;
     }
 }

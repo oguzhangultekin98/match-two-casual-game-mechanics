@@ -5,25 +5,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
     [SerializeField] private IntScriptableEvent Event_GameStateChanged;
     public GameState gameState;
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
-
-    public void LevelCompleted()
-    {
-        Debug.Log("LevelCompleted");
-        gameState = GameState.GameEnd;
-    }
 
     private void ChangeGameState(GameState state)
     {
@@ -33,11 +16,13 @@ public class GameManager : MonoBehaviour
 
     public void AllGoalsAccomplished()
     {
+        Debug.Log("All Goals Accomplished");
         ChangeGameState(GameState.GameEnd);
     }
 
     public void PlayerHasNoMoveLeft()
     {
+        Debug.Log("No move left");
         ChangeGameState(GameState.GameEnd);
     }
 }
