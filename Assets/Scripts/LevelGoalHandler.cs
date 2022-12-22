@@ -4,32 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using ScriptableEvents.Events;
 
 public class LevelGoalHandler : MonoBehaviour
 {
-    [SerializeField] private LevelDataScriptableObject levelData;
     [SerializeField] private ColorSpriteScriptableObj[] colorSpriteScriptableObjects;
     [SerializeField] private Sprite notImplementedSprite;
     [SerializeField] private RectTransform[] slots;
+    [SerializeField] private SimpleScriptableEvent Event_AllGoalsAccomplished;
     private List<LevelGoal> levelGoals;
     private MissionSlot[] missionSlots;
 
-    public static LevelGoalHandler Instance;
-
     private void Awake()
     {
-        levelGoals = levelData.Value.LevelGoals.ToList();
-
-        if (Instance == null)
-            Instance = this;
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         FillMissinSlotsArray();
         SetMissionSlotVisuals();
+    }
+
+    public void SetLevelGoals(List<LevelGoal> LevelGoals)
+    {
+        levelGoals = LevelGoals;
     }
 
     private void FillMissinSlotsArray()
@@ -65,7 +59,19 @@ public class LevelGoalHandler : MonoBehaviour
         return notImplementedSprite;
     }
 
-    public bool PieceCleared(PieceType type, ColorType colorType)
+    public void GamePieceCleared(GameObject clearedPiece)
+    {
+        GamePiece piece = clearedPiece.GetComponent<GamePiece>();
+        PieceType type = piece.Type;
+        ColorType colorType = ColorType.Default;
+        if (piece.ColorComponent)
+        {
+            colorType = piece.ColorComponent.Color;
+        }
+        PieceCleared(type,colorType);
+    }
+
+    private bool PieceCleared(PieceType type, ColorType colorType)
     {
         for (int i = 0; i < levelGoals.Count; i++)
         {
@@ -94,24 +100,6 @@ public class LevelGoalHandler : MonoBehaviour
         return false;
     }
 
-    public Vector3 GetGoalLocation(ColorType color)
-    {
-        Vector3 location = Vector3.zero;
-        Vector3 gamePiecePivotOffset = new Vector3(-0.25f, 0.25f);
-        for (int i = 0; i < levelGoals.Count; i++)
-        {
-            if (color == levelGoals[i].ColorType)
-            {
-                RectTransform rect = missionSlots[i].Slotobject.GetComponent<RectTransform>();
-                Vector3 pieceLocation = rect.transform.position;
-                pieceLocation.z = 0f;
-                return pieceLocation + gamePiecePivotOffset;
-            }
-        }
-        location.z = 0f;
-        return location;
-    }
-
     private void CheckIfAllGoalsCompleted()
     {
         for (int i = 0; i < levelGoals.Count; i++)
@@ -119,6 +107,6 @@ public class LevelGoalHandler : MonoBehaviour
             if (levelGoals[i].Amount != 0)
                 return;
         }
-        GameManager.Instance.LevelCompleted();
+        Event_AllGoalsAccomplished.Raise();
     }
 }

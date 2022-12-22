@@ -1,21 +1,21 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using ScriptableEvents.Events;
 
 public class GameGrid : MonoBehaviour
 {
     [SerializeField] private LevelDataScriptableObject levelDataScriptableObj;
     private LevelData levelData;
-    private int levelMoveAmount;
 
     private Dictionary<PieceType, GameObject> piecePrefabDict;
     private GamePiece[,] pieces;
+    [SerializeField] private SimpleScriptableEvent Event_ClickedOnMatch;
     bool isGridCheckedForMatches = false;
 
     private void Awake()
     {
         levelData = levelDataScriptableObj.Value;
-        levelMoveAmount = levelData.LevelMoveAmount;
         pieces = new GamePiece[levelData.XDim, levelData.YDim];
         CreatePiecePrafabDict();
         FillGridWithPieceType(PieceType.EMPTY);
@@ -336,11 +336,8 @@ public class GameGrid : MonoBehaviour
             sameColorNeighbours = GetSameColorNeighbours(pressedPiece, sameColorNeighbours, pressedPiece.ColorComponent.Color);
             if (sameColorNeighbours.Count >= 2)
             {
-                levelMoveAmount--;
-
+                Event_ClickedOnMatch.Raise();
                 ClearPieces(sameColorNeighbours);
-                if (levelMoveAmount < 1)
-                    GameManager.Instance.LevelCompleted();
             }
         }
     }
@@ -411,7 +408,6 @@ public class GameGrid : MonoBehaviour
 
     private void ClearPiece(int xCord, int yCord)
     {
-        SoundManager.Instance.PlayPieceClearedSound(pieces[xCord,yCord].Type);
         pieces[xCord, yCord].ClearableComponent.Clear();
         SpawnNewPiece(xCord, yCord, PieceType.EMPTY);
     }
