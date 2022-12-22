@@ -8,20 +8,26 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LevelDataScriptableObject levelData;
     [SerializeField] private SimpleScriptableEvent Event_PlayerHasNoMoveLeft;
 
-    private List<GameGrid> imitlizedGameGrids;
+    private List<GameGrid> initializedGameGrids;
     private int levelMoveAmount;
 
     private void Awake()
     {
-        LevelGoalHandler levelGoalHandler = transform.parent.GetComponentInChildren<LevelGoalHandler>();
-        levelGoalHandler.SetLevelGoals(levelData.Value.LevelGoals);
+        InitializeLevelGoalHandler();
         levelMoveAmount = levelData.Value.LevelMoveAmount;
-        imitlizedGameGrids = new List<GameGrid>();
+        initializedGameGrids = new List<GameGrid>();
     }
 
+    private void InitializeLevelGoalHandler()
+    {
+        LevelGoalHandler levelGoalHandler = transform.parent.GetComponentInChildren<LevelGoalHandler>();
+        levelGoalHandler.Initialize(levelData.Value.LevelGoals);
+    }
+    #region Event_Methods
     public void PlayerClickedOnMatch()
     {
         levelMoveAmount--;
+        Debug.Log("Remaining amount of move: " + levelMoveAmount);
         if (levelMoveAmount < 1)
             Event_PlayerHasNoMoveLeft.Raise();
     }
@@ -30,8 +36,9 @@ public class LevelManager : MonoBehaviour
     {
         if (gridGO.TryGetComponent(out GameGrid gameGrid))
         {
-            imitlizedGameGrids.Add(gameGrid);
-            gameGrid.InitilizeGameGrid(levelData.Value);
+            initializedGameGrids.Add(gameGrid);
+            gameGrid.Initilize(levelData.Value);
         }
     }
+    #endregion
 }

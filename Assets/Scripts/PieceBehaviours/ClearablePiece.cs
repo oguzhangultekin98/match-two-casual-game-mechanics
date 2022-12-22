@@ -9,6 +9,7 @@ public class ClearablePiece : MonoBehaviour
 
     private GamePiece piece;
     private SpriteRenderer spriteRenderer;
+
     [SerializeField] private GameObjectScriptableEvent Event_PieceCleared;
 
     private void Awake()

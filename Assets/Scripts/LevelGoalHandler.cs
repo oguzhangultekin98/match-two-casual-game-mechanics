@@ -12,18 +12,15 @@ public class LevelGoalHandler : MonoBehaviour
     [SerializeField] private Sprite notImplementedSprite;
     [SerializeField] private RectTransform[] slots;
     [SerializeField] private SimpleScriptableEvent Event_AllGoalsAccomplished;
+
     private List<LevelGoal> levelGoals;
     private MissionSlot[] missionSlots;
 
-    private void Awake()
-    {
-        FillMissinSlotsArray();
-        SetMissionSlotVisuals();
-    }
-
-    public void SetLevelGoals(List<LevelGoal> LevelGoals)
+    public void Initialize(List<LevelGoal> LevelGoals)
     {
         levelGoals = LevelGoals;
+        FillMissinSlotsArray();
+        SetMissionSlotVisuals();
     }
 
     private void FillMissinSlotsArray()
@@ -46,6 +43,7 @@ public class LevelGoalHandler : MonoBehaviour
             missionSlots[i].ColorType = levelGoals[i].ColorType;
             missionImage.sprite = GetRelatedSprite(levelGoals[i].ColorType);
             missionImage.color = Color.white;
+            Debug.Log("Clear " + levelGoals[i].Amount +" "+ levelGoals[i].ColorType);
         }
     }
 
@@ -59,6 +57,36 @@ public class LevelGoalHandler : MonoBehaviour
         return notImplementedSprite;
     }
 
+    private void AdjustGoalsProgress(PieceType type, ColorType colorType)
+    {
+        for (int i = 0; i < levelGoals.Count; i++)
+        {
+            if (levelGoals[i].PieceType == PieceType.REGULAR)
+            {
+                if (levelGoals[i].ColorType == colorType && levelGoals[i].Amount > 0)
+                {
+                    levelGoals[i].Amount--;
+                    Debug.Log("Clear " + levelGoals[i].Amount + " " + levelGoals[i].ColorType);
+                }
+            }
+            else if(levelGoals[i].PieceType == type && levelGoals[i].Amount > 0)
+            { 
+                levelGoals[i].Amount--;
+            }
+        }
+    }
+
+    private bool CheckIfAllGoalsCompleted()
+    {
+        for (int i = 0; i < levelGoals.Count; i++)
+        {
+            if (levelGoals[i].Amount != 0)
+                return false;
+        }
+        return true;
+    }
+
+    #region Event_Methods
     public void GamePieceCleared(GameObject clearedPiece)
     {
         GamePiece piece = clearedPiece.GetComponent<GamePiece>();
@@ -68,45 +96,9 @@ public class LevelGoalHandler : MonoBehaviour
         {
             colorType = piece.ColorComponent.Color;
         }
-        PieceCleared(type,colorType);
+        AdjustGoalsProgress(type, colorType);
+        if (CheckIfAllGoalsCompleted())
+            Event_AllGoalsAccomplished.Raise();
     }
-
-    private bool PieceCleared(PieceType type, ColorType colorType)
-    {
-        for (int i = 0; i < levelGoals.Count; i++)
-        {
-            if (levelGoals[i].PieceType == PieceType.REGULAR)
-            {
-                if (levelGoals[i].ColorType == colorType && levelGoals[i].Amount > 0)
-                {
-                    levelGoals[i].Amount--;
-                    if (levelGoals[i].Amount == 0)
-                        CheckIfAllGoalsCompleted();
-
-                    return true;
-                }
-                continue;
-            }
-
-            if (levelGoals[i].PieceType == type && levelGoals[i].Amount > 0)
-            {
-                levelGoals[i].Amount--;
-                if (levelGoals[i].Amount == 0)
-                    CheckIfAllGoalsCompleted();
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void CheckIfAllGoalsCompleted()
-    {
-        for (int i = 0; i < levelGoals.Count; i++)
-        {
-            if (levelGoals[i].Amount != 0)
-                return;
-        }
-        Event_AllGoalsAccomplished.Raise();
-    }
+    #endregion
 }

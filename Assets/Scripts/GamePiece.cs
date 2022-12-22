@@ -1,21 +1,33 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class GamePiece : MonoBehaviour
+public class GamePiece : MonoBehaviour
 {
+    private GameGrid grid;
+    public GameGrid Grid => grid;
+
+    private MovablePiece movableComponent;
+    public MovablePiece MovableComponent => movableComponent;
+
+    private ColorPiece colorComponent;
+    public ColorPiece ColorComponent => colorComponent;
+
+    private ClearablePiece clearableComponent;
+    public ClearablePiece ClearableComponent => clearableComponent;
+
     private int xCord;
     private int yCord;
 
     public int XCord
     {
         get => xCord;
-        set { if (IsMovable()) { xCord = value; } }
+        set { if (IsMovable) { xCord = value; } }
     }
 
     public int YCord
     {
         get => yCord;
-        set { if (IsMovable()) { yCord = value; } }
+        set { if (IsMovable) { yCord = value; } }
     }
 
     private PieceType type;
@@ -26,32 +38,27 @@ public abstract class GamePiece : MonoBehaviour
         set { type = value; } 
     }
 
+    public bool IsMovable => movableComponent != null;
 
-    [HideInInspector] public GameGrid Grid;
-    [HideInInspector] public MovablePiece MovableComponent;
-    [HideInInspector] public ColorPiece ColorComponent;
-    [HideInInspector] public ClearablePiece ClearableComponent;
+    public bool IsColored => colorComponent != null;
 
-    public bool IsMovable()
+    private void Awake()
     {
-        return MovableComponent != null;
+        movableComponent = GetComponent<MovablePiece>();
+        colorComponent = GetComponent<ColorPiece>();
+        clearableComponent = GetComponent<ClearablePiece>();
     }
 
-    public bool IsColored()
-    {
-        return ColorComponent != null;
-    }
-
-    public void SetNecessarVariables(int x, int y, GameGrid grid, PieceType type)
+    public void Initialize(int x, int y, GameGrid grid, PieceType type)
     {
         xCord = x;
         yCord = y;
-        this.Grid = grid;
+        this.grid = grid;
         this.type = type;
     }
 
     private void OnMouseDown()
     {
-        Grid.PressPiece(this);
+        grid.PressPiece(this);
     }
 }

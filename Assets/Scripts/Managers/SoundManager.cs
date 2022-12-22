@@ -5,8 +5,10 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
+
     [SerializeField] private Sound[] sounds;
     [SerializeField] private Sound pieceReachedGoal;
+
     private void Awake()
     {
         if (Instance == null)

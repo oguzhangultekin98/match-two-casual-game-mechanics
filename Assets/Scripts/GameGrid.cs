@@ -20,7 +20,7 @@ public class GameGrid : MonoBehaviour
         Event_GameGridWaitingToInitilize.Raise(gameObject);
     }
 
-    public void InitilizeGameGrid(LevelData LevelData)
+    public void Initilize(LevelData LevelData)
     {
         levelData = LevelData;
         pieces = new GamePiece[levelData.XDim, levelData.YDim];
@@ -35,16 +35,16 @@ public class GameGrid : MonoBehaviour
         {
             yield return new WaitForSeconds(levelData.FillTime);
 
-            bool anyGamePieceMovedBelow = MovePiecesHaveEmptyNeighbourBelow();
+            bool anyGamePieceMovedBelow = MovePiecesDownIntoEmptySlots();
             bool anyGamePieceSpawnedOnFirstRow = FillFirstRow();
-            bool isAnyChangeHappenedOnLastCycle = anyGamePieceMovedBelow || anyGamePieceSpawnedOnFirstRow;
+            bool dirty = anyGamePieceMovedBelow || anyGamePieceSpawnedOnFirstRow;
 
-            if (!isAnyChangeHappenedOnLastCycle && !isGridCheckedForMatches)
+            if (!isGridCheckedForMatches && !dirty)
             {
                 List<Match> matches = GetMatchesOnGrid();
                 if (matches.Count == 0)
                 {
-                    if (IsPossibleToCreateMatchOnGrid())
+                    if (IsItPossibleToCreateMatchOnGrid())
                         ShuffleGameGrid();
                     else
                         ColorGamePiecesRandomly();
@@ -58,29 +58,7 @@ public class GameGrid : MonoBehaviour
         }
     }
 
-    private void UpdateRegularPieceTiers(List<Match> matches)
-    {
-        List<GamePiece> checkedPieces = new List<GamePiece>();
-        for (int i = 0; i < matches.Count; i++)
-        {
-            for (int y = 0; y < matches[i].gamePieces.Count; y++)
-            {
-                checkedPieces.Add(matches[i].gamePieces[y]);
-                matches[i].gamePieces[y].ColorComponent.UpdateTierVisual(matches[i].gamePieces.Count);
-            }
-        }
-
-        for (int x = 0; x < levelData.XDim; x++)
-        {
-            for (int y = 0; y < levelData.YDim; y++)
-            {
-                if (!checkedPieces.Contains(pieces[x, y]) && pieces[x,y].Type == PieceType.REGULAR)
-                    pieces[x, y].ColorComponent.UpdateTierVisual(1);
-            }
-        }
-    }
-
-    private bool MovePiecesHaveEmptyNeighbourBelow()
+    private bool MovePiecesDownIntoEmptySlots()
     {
         bool madeChangesOnGrid = false;
         for (int y = levelData.YDim - 2; y >= 0; y--)
@@ -89,7 +67,7 @@ public class GameGrid : MonoBehaviour
             {
                 GamePiece piece = pieces[x, y];
 
-                if (!piece.IsMovable())
+                if (!piece.IsMovable)
                     continue;
 
                 GamePiece pieceBelow = pieces[x, y + 1];
@@ -139,13 +117,12 @@ public class GameGrid : MonoBehaviour
         }
         float randomValue = Random.Range(0, totalRange);
 
-        var current = 0f;
+        float current = 0f;
         for (int i = 0; i < levelData.PiecePrefabs.Count; i++)
         {
             if (current <= randomValue && randomValue < current + levelData.PiecePrefabs[i].SpawnRate)
-            {
                 return levelData.PiecePrefabs[i].Type;
-            }
+
             current += levelData.PiecePrefabs[i].SpawnRate;
         }
         return PieceType.EMPTY;
@@ -187,9 +164,7 @@ public class GameGrid : MonoBehaviour
         for (int i = 0; i < levelData.PiecePrefabs.Count; i++)
         {
             if (!piecePrefabDict.ContainsKey(levelData.PiecePrefabs[i].Type))
-            {
                 piecePrefabDict.Add(levelData.PiecePrefabs[i].Type, levelData.PiecePrefabs[i].Prefab);
-            }
         }
     }
 
@@ -217,6 +192,28 @@ public class GameGrid : MonoBehaviour
             }
         }
         isGridCheckedForMatches = false;
+    }
+
+    private void UpdateRegularPieceTiers(List<Match> matches)
+    {
+        List<GamePiece> checkedPieces = new List<GamePiece>();
+        for (int i = 0; i < matches.Count; i++)
+        {
+            for (int y = 0; y < matches[i].gamePieces.Count; y++)
+            {
+                checkedPieces.Add(matches[i].gamePieces[y]);
+                matches[i].gamePieces[y].ColorComponent.UpdateTierVisual(matches[i].gamePieces.Count);
+            }
+        }
+
+        for (int x = 0; x < levelData.XDim; x++)
+        {
+            for (int y = 0; y < levelData.YDim; y++)
+            {
+                if (!checkedPieces.Contains(pieces[x, y]) && pieces[x, y].Type == PieceType.REGULAR)
+                    pieces[x, y].ColorComponent.UpdateTierVisual(1);
+            }
+        }
     }
 
     private void ClearGrid()
@@ -249,15 +246,13 @@ public class GameGrid : MonoBehaviour
         isGridCheckedForMatches = false;
     }
 
-    private bool IsPossibleToCreateMatchOnGrid()
+    private bool IsItPossibleToCreateMatchOnGrid()
     {
         for (int i = 0; i < levelData.AvailableColorsForLevel.Count; i++)
         {
             int numOfSameColorPiecesOnGrid = GetSameColorPiecesOnGrid(levelData.AvailableColorsForLevel[i]).Count;
             if (numOfSameColorPiecesOnGrid >= 2)
-            {
                 return true;
-            }
         }
         return false;
     }
@@ -271,9 +266,7 @@ public class GameGrid : MonoBehaviour
             for (int j = 0; j < levelData.YDim; j++)
             {
                 if (pieces[i, j].ColorComponent.Color == color)
-                {
                     sameColorPiecesOnGrid.Add(pieces[i, j]);
-                }
             }
         }
         return sameColorPiecesOnGrid;
@@ -324,7 +317,7 @@ public class GameGrid : MonoBehaviour
     {
         GameObject newPiece = Instantiate(piecePrefabDict[type], GetWorldPosition(x, y), Quaternion.identity, transform);
         pieces[x, y] = newPiece.GetComponent<GamePiece>();
-        pieces[x, y].SetNecessarVariables(x, y, this, type);
+        pieces[x, y].Initialize(x, y, this, type);
 
         return pieces[x, y];
     }
@@ -336,7 +329,6 @@ public class GameGrid : MonoBehaviour
 
         if (pressedPiece.Type == PieceType.REGULAR)
         {
-
             isGridCheckedForMatches = false;
             List<GamePiece> sameColorNeighbours = new List<GamePiece>();
             sameColorNeighbours.Add(pressedPiece);
@@ -349,63 +341,63 @@ public class GameGrid : MonoBehaviour
         }
     }
 
-    private List<GamePiece> GetSameColorNeighbours(GamePiece startingPiece, List<GamePiece> SameColorNeighbours, ColorType searchingColor)
+    private List<GamePiece> GetSameColorNeighbours(GamePiece startingPiece, List<GamePiece> sameColorNeighbours, ColorType searchingColor)
     {
-        var startingPieceXCord = startingPiece.XCord;
-        var startingPieceYCord = startingPiece.YCord;
+        int startingPieceXCord = startingPiece.XCord;
+        int startingPieceYCord = startingPiece.YCord;
 
-        CheckNeighboursForSameColor(SameColorNeighbours, searchingColor, startingPieceXCord, startingPieceYCord);
+        CheckNeighboursForSameColor(sameColorNeighbours, searchingColor, startingPieceXCord, startingPieceYCord);
 
-        return SameColorNeighbours;
+        return sameColorNeighbours;
     }
 
-    private List<GamePiece> CheckNeighboursForSameColor(List<GamePiece> SameColorNeighbours, ColorType searchingColor, int startingPieceXCord, int startingPieceYCord)
+    private List<GamePiece> CheckNeighboursForSameColor(List<GamePiece> sameColorNeighbours, ColorType searchingColor, int startingPieceXCord, int startingPieceYCord)
     {
         if (startingPieceYCord > 0)
         {
-            var upNeighbour = pieces[startingPieceXCord, startingPieceYCord - 1];
+            GamePiece upNeighbour = pieces[startingPieceXCord, startingPieceYCord - 1];
             if(upNeighbour.Type == PieceType.REGULAR)
-                CheckNeighbourForMatchingColor(upNeighbour, SameColorNeighbours, searchingColor);
+                CheckNeighbourForMatchingColor(upNeighbour, sameColorNeighbours, searchingColor);
         }
 
         if (startingPieceYCord < levelData.YDim - 1)
         {
-            var belowNeighbour = pieces[startingPieceXCord, startingPieceYCord + 1];
+            GamePiece belowNeighbour = pieces[startingPieceXCord, startingPieceYCord + 1];
             if (belowNeighbour.Type == PieceType.REGULAR)
-                CheckNeighbourForMatchingColor(belowNeighbour, SameColorNeighbours, searchingColor);
+                CheckNeighbourForMatchingColor(belowNeighbour, sameColorNeighbours, searchingColor);
         }
 
         if (startingPieceXCord > 0)
         {
-            var leftNeighbour = pieces[startingPieceXCord - 1, startingPieceYCord];
+            GamePiece leftNeighbour = pieces[startingPieceXCord - 1, startingPieceYCord];
             if (leftNeighbour.Type == PieceType.REGULAR)
-                CheckNeighbourForMatchingColor(leftNeighbour, SameColorNeighbours, searchingColor);
+                CheckNeighbourForMatchingColor(leftNeighbour, sameColorNeighbours, searchingColor);
         }
 
         if (startingPieceXCord < levelData.XDim - 1)
         {
-            var rightNeighbour = pieces[startingPieceXCord + 1, startingPieceYCord];
+            GamePiece rightNeighbour = pieces[startingPieceXCord + 1, startingPieceYCord];
             if (rightNeighbour.Type == PieceType.REGULAR)
-                CheckNeighbourForMatchingColor(rightNeighbour, SameColorNeighbours, searchingColor);
+                CheckNeighbourForMatchingColor(rightNeighbour, sameColorNeighbours, searchingColor);
         }
-        return SameColorNeighbours;
+        return sameColorNeighbours;
     }
 
-    private void CheckNeighbourForMatchingColor(GamePiece neighbour, List<GamePiece> SameColorNeighbours, ColorType searchingColor)
+    private void CheckNeighbourForMatchingColor(GamePiece neighbour, List<GamePiece> sameColorNeighbours, ColorType searchingColor)
     {
 
-        if (!SameColorNeighbours.Contains(neighbour)
+        if (!sameColorNeighbours.Contains(neighbour)
             && CheckColorMatchBetweenPieces(searchingColor, neighbour))
         {
-            SameColorNeighbours.Add(neighbour);
-            GetSameColorNeighbours(neighbour, SameColorNeighbours, searchingColor);
+            sameColorNeighbours.Add(neighbour);
+            GetSameColorNeighbours(neighbour, sameColorNeighbours, searchingColor);
         }
     }
 
     private bool CheckColorMatchBetweenPieces(ColorType firstPiece, GamePiece secondPiece)
     {
-        var firstPieceColor = firstPiece;
-        var secoundPieceColor = secondPiece.ColorComponent.Color;
+        ColorType firstPieceColor = firstPiece;
+        ColorType secoundPieceColor = secondPiece.ColorComponent.Color;
 
         if (firstPieceColor == secoundPieceColor)
             return true;
@@ -426,11 +418,12 @@ public class GameGrid : MonoBehaviour
             ClearPiece(clearPieceList[i].XCord, clearPieceList[i].YCord);
         }
     }
-
+    #region Event_Methods
     public void OnGameStateChange(int gameState)
     {
         GameState state = (GameState)gameState;
         if (state == GameState.GameEnd)
             isGameEnded = true;
     }
+    #endregion
 }

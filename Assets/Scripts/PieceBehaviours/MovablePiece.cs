@@ -14,9 +14,7 @@ public class MovablePiece : MonoBehaviour
     public void MoveOnGrid(int newX, int newY, float time)
     {
         if (moveCoroutine != null)
-        {
             StopCoroutine(moveCoroutine);
-        }
 
         moveCoroutine = MoveOnGridCoroutine(newX, newY, time);
         StartCoroutine(moveCoroutine);
@@ -25,9 +23,7 @@ public class MovablePiece : MonoBehaviour
     public void MoveOnWorld(Vector3 startPos, Vector3 endPos,float time)
     {
         if (moveCoroutine != null)
-        {
             StopCoroutine(moveCoroutine);
-        }
 
         moveCoroutine = LerpToPosition(startPos, endPos, time);
         StartCoroutine(moveCoroutine);

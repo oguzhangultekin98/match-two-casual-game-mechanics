@@ -20,7 +20,7 @@ MonoBehaviour:
     levelGoals:
     - pieceType: 1
       colorType: 5
-      amount: 810
+      amount: 781
     levelMoveAmount: 25
     piecePrefabs:
     - type: 0
@@ -28,4 +28,4 @@ MonoBehaviour:
       spawnRate: 0
     - type: 1
       prefab: {fileID: 4375375242950779544, guid: 5e77167a65abbe94f8ce80b2d998ca5e, type: 3}
-      spawnRate: 0.9
+      spawnRate: 1

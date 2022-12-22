@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
         gameState = state;
         Event_GameStateChanged.Raise((int)state);
     }
-
+    #region Event_Methods
     public void AllGoalsAccomplished()
     {
         Debug.Log("All Goals Accomplished");
@@ -25,4 +25,5 @@ public class GameManager : MonoBehaviour
         Debug.Log("No move left");
         ChangeGameState(GameState.GameEnd);
     }
+    #endregion
 }
